@@ -1,0 +1,498 @@
+/* Secció: General */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --pink: #c94fa1;
+  --pink-dark: #a13a82;
+  --pink-tint: #fcf0f8;
+  --ink: #1a1718;
+  --ink-soft: #4a4045;
+  --grey: #736b6f;
+  --line: #ede4ea;
+  --paper: #ffffff;
+  --paper-alt: #faf7f9;
+  --open: #2b7a48;
+  --open-bg: #e2f5e9;
+  --closed: #c93b4c;
+  --closed-bg: #fce8ea;
+  --radius: 12px;
+  --wrap: 960px;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--pink-dark);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover { color: var(--pink); }
+
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--pink-tint);
+  outline-offset: 2px;
+}
+
+img { max-width: 100%; display: block; }
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.alt-bg { background-color: var(--paper-alt); }
+
+p { text-align: justify; }
+
+/* Secció: Components visuals */
+.gear-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 5px;
+  background: var(--pink);
+  clip-path: polygon(50% 0%, 61% 10%, 79% 4%, 82% 23%, 100% 29%, 92% 46%, 100% 63%, 82% 69%, 79% 88%, 61% 82%, 50% 100%, 39% 82%, 21% 88%, 18% 69%, 0% 63%, 8% 46%, 0% 29%, 18% 23%, 21% 4%, 39% 10%);
+}
+
+/* Secció: Capçalera */
+header.site {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  max-width: var(--wrap);
+  margin: 0 auto;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.nav-brand img { height: 38px; width: auto; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.nav-links a { 
+  color: var(--ink-soft); 
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 2px;
+  bottom: -4px; left: 0;
+  background-color: var(--pink);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { width: 100%; }
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Secció: Hero */
+.hero {
+  padding: 80px 0 64px;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .wrap {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  font-size: 0.95rem;
+  color: var(--pink-dark);
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.hero p.lede {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  max-width: none;
+  margin-bottom: 32px;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--pink);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(201, 79, 161, 0.3);
+  border: none;
+}
+
+.btn-primary:hover { 
+  background: var(--pink-dark); 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 79, 161, 0.4);
+}
+
+.btn-ghost {
+  border-color: var(--line);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.btn-ghost:hover { 
+  border-color: var(--pink); 
+  color: var(--pink-dark); 
+  background: var(--pink-tint);
+}
+
+.hero-logo img { 
+  width: 100%;
+  max-width: 320px; 
+  margin: 0 auto;
+  mix-blend-mode: multiply; 
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.02)); 
+}
+
+/* Secció: Sala */
+.sala { 
+  padding: 24px 0 64px; 
+  position: relative; 
+  z-index: 10; 
+}
+
+.sala-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-md);
+}
+
+.sala-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.sala-sub { color: var(--grey); font-size: 0.95rem; margin-top: 4px; }
+
+.sala-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.sala-status .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+.sala-status.is-open { background: var(--open-bg); color: var(--open); }
+.sala-status.is-open .dot { 
+  background: var(--open); 
+  animation: pulse-open 2s infinite;
+}
+
+.sala-status.is-closed { background: var(--closed-bg); color: var(--closed); }
+.sala-status.is-closed .dot { background: var(--closed); }
+
+@keyframes pulse-open {
+  0% { box-shadow: 0 0 0 0 rgba(43, 122, 72, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(43, 122, 72, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(43, 122, 72, 0); }
+}
+
+/* Secció: Contingut i Seccions */
+section { padding: 80px 0; }
+
+.section-head { margin-bottom: 40px; max-width: none; }
+.section-head h2 { font-size: 2rem; margin-bottom: 12px; }
+.section-head p { color: var(--ink-soft); font-size: 1.1rem; }
+
+.objectius {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.objectius li {
+  display: flex;
+  gap: 16px;
+  background: var(--paper);
+  padding: 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.objectius li:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--pink-tint);
+}
+
+.objectius p { margin: 6px 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+.objectius strong { color: var(--ink); font-size: 1.05rem; font-family: 'Space Grotesk', sans-serif;}
+
+#activitats-list { display: grid; gap: 16px; }
+
+.activitat {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.activitat:hover {
+  border-color: var(--pink);
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.activitat .data {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--pink);
+  font-size: 1.1rem;
+  background: var(--pink-tint);
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.activitat h3 { font-size: 1.2rem; margin-bottom: 8px; }
+.activitat p { margin: 0; color: var(--ink-soft); }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  background: var(--paper-alt);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--grey);
+  text-align: center;
+}
+
+.empty-state p { margin: 0; font-weight: 500; }
+
+.xarxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+.xarxa {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+
+.icon-wrapper {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  background: var(--paper-alt);
+  border-radius: 8px;
+  color: var(--pink-dark);
+  transition: background 0.2s ease;
+}
+
+.xarxa:hover { border-color: var(--pink); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.xarxa:hover .icon-wrapper { background: var(--pink-tint); color: var(--pink); }
+.xarxa svg { width: 20px; height: 20px; }
+
+/* Secció: Peu de pàgina */
+footer.site {
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+  background: var(--paper);
+}
+
+.footer-content {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  color: var(--grey); font-size: 0.9rem;
+}
+
+.admin-link {
+  padding: 8px 16px;
+  background: var(--paper-alt);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.admin-link:hover { background: var(--line); }
+
+/* Secció: Administració */
+body.admin-body { background: var(--paper-alt); }
+.admin-shell { max-width: 640px; margin: 40px auto; padding: 0 24px; }
+.admin-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow-md); margin-bottom: 24px; }
+.admin-card h1 { font-size: 1.75rem; margin-bottom: 8px; }
+.admin-card h2.admin-subtitle { font-size: 1.15rem; margin: 24px 0 12px; font-family: 'Space Grotesk', sans-serif; }
+.admin-card p.hint { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 24px; }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+.field input { width: 100%; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius); font-family: inherit; font-size: 0.95rem; background: var(--paper); color: var(--ink); transition: border-color 0.2s ease; }
+.field input:focus { outline: none; border-color: var(--pink); }
+.toggle-row { display: flex; align-items: center; gap: 16px; background: var(--paper-alt); border: 1px solid var(--line); padding: 20px; border-radius: var(--radius); margin-bottom: 24px; }
+.switch { position: relative; display: inline-block; width: 52px; height: 28px; flex: none; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.track { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--line); transition: .3s; border-radius: 28px; }
+.track:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
+.switch input:checked + .track { background-color: var(--open); }
+.switch input:checked + .track:before { transform: translateX(24px); }
+.field-hint { font-size: 0.85rem; color: var(--grey); margin-top: 2px; }
+.activity-row { background: var(--paper-alt); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.row-top { display: grid; grid-template-columns: 130px 1fr; gap: 12px; margin-bottom: 10px; }
+.activity-row input[type="text"] { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: var(--paper); width: 100%; }
+.activity-input-full { width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: var(--paper); margin-bottom: 10px; }
+.remove-link { background: none; border: none; color: var(--closed); font-size: 0.85rem; font-weight: 600; cursor: pointer; padding: 0; }
+.remove-link:hover { text-decoration: underline; }
+#status-msg { display: none; margin-top: 16px; padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; text-align: center; }
+#status-msg.ok { background: var(--open-bg); color: var(--open); }
+#status-msg.err { background: var(--closed-bg); color: var(--closed); }
+#login-btn, #add-activity, #save-btn { width: 100%; cursor: pointer; margin-top: 8px; }
+#login-btn, #save-btn { border: none; }
+#login-msg { display: none; margin-top: 14px; color: var(--closed); font-size: 0.9rem; text-align: center; }
+#panel-card { display: none; }
+.admin-actions { margin-top: 24px; display: flex; gap: 12px; }
+#logout-btn { cursor: pointer; }
+.empty-activity-msg { color: var(--grey); font-size: 0.9rem; text-align: center; padding: 12px; }
+
+/* Secció: Responsive */
+@media (max-width: 768px) {
+  .mobile-menu-btn { display: block; }
+  .nav-links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    flex-direction: column;
+    padding: 24px;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  }
+  .nav-links.active {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .hero .wrap { grid-template-columns: 1fr; text-align: center; gap: 32px; }
+  .hero-eyebrow { justify-content: center; }
+  .hero p.lede { margin: 0 auto 32px; }
+  .hero-cta { justify-content: center; }
+  .hero-logo { order: -1; }
+  .hero-logo img { max-width: 200px; }
+  .sala { margin-top: 0; padding-top: 24px; }
+  .sala-card { flex-direction: column; align-items: flex-start; gap: 16px; padding: 20px; }
+  .activitat { grid-template-columns: 1fr; gap: 12px; }
+  .activitat .data { display: inline-block; width: max-content; padding: 6px 12px; }
+  .footer-content { flex-direction: column; text-align: center; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}

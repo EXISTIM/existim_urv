@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accés equip — EXISTIM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+<header class="site">
+  <div class="nav">
+    <div class="nav-brand">
+      <img src="assets/logo.png" alt="Logotip d'EXISTIM">
+      EXISTIM
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">← Torna al lloc web</a>
+    </nav>
+  </div>
+</header>
+
+<div class="admin-shell">
+  <div class="admin-card" id="login-card">
+    <h1>Accés de l'equip</h1>
+    <p class="hint">Introdueix les credencials de l'associació per gestionar la sala i les activitats.</p>
+    <div class="field">
+      <label for="email">Correu electrònic</label>
+      <input type="email" id="email" autocomplete="username" placeholder="correu@urv.cat">
+    </div>
+    <div class="field">
+      <label for="password">Contrasenya</label>
+      <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" id="login-btn">Entra</button>
+    <div id="login-msg">
+      Credencials incorrectes.
+    </div>
+  </div>
+
+  <div class="admin-card" id="panel-card">
+    <h1>Panell de control</h1>
+    <p class="hint">Els canvis es guarden i s'actualitzen automàticament a la base de dades.</p>
+
+    <div class="toggle-row">
+      <label class="switch">
+        <input type="checkbox" id="sala-toggle">
+        <span class="track"></span>
+      </label>
+      <div>
+        <strong id="sala-toggle-label">Sala tancada</strong>
+        <div class="field-hint">Activa-ho quan la sala estigui oberta.</div>
+      </div>
+    </div>
+
+    <h2 class="admin-subtitle">Activitats del mes</h2>
+    <div id="activity-editor"></div>
+    <button class="btn btn-ghost" id="add-activity" type="button">+ Afegeix una activitat</button>
+
+    <div class="admin-actions">
+      <button class="btn btn-primary" id="save-btn">Desa les noves activitats</button>
+      <button class="btn btn-ghost" id="logout-btn">Surt</button>
+    </div>
+
+    <div id="status-msg"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseClient = supabase.createClient('https://tgagjxgoisjaqqlbuzyz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnYWdqeGdvaXNqYXFxbGJ1enl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MzE2NzIsImV4cCI6MjEwNDAwNzY3Mn0.cd06AyYgxkll79ugvHA--cX1-B7GErGq_TpJt6DMwds');
+  
+  const loginCard = document.getElementById('login-card');
+  const panelCard = document.getElementById('panel-card');
+  const salaToggle = document.getElementById('sala-toggle');
+  const toggleLabel = document.getElementById('sala-toggle-label');
+  const activityEditor = document.getElementById('activity-editor');
+  const statusMsg = document.getElementById('status-msg');
+
+  document.getElementById('login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+      document.getElementById('login-msg').style.display = 'block';
+      document.getElementById('login-msg').innerText = "Correu o contrasenya incorrectes.";
+    } else {
+      document.getElementById('login-msg').style.display = 'none';
+      checkSession();
+    }
+  });
+
+  async function checkSession() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      loginCard.style.display = 'none';
+      panelCard.style.display = 'block';
+      loadStatus();
+      loadActivities();
+    } else {
+      loginCard.style.display = 'block';
+      panelCard.style.display = 'none';
+    }
+  }
+
+  async function loadStatus() {
+    const { data } = await supabaseClient.from('room_status').select('is_open').eq('id', 1).single();
+    if (data) {
+      salaToggle.checked = data.is_open;
+      toggleLabel.innerText = data.is_open ? "Sala oberta" : "Sala tancada";
+    }
+  }
+
+  salaToggle.addEventListener('change', async (e) => {
+    const isOpen = e.target.checked;
+    const { error } = await supabaseClient.from('room_status').update({ is_open: isOpen }).eq('id', 1);
+    
+    if (!error) {
+      toggleLabel.innerText = isOpen ? "Sala oberta" : "Sala tancada";
+      showStatusMsg(isOpen ? 'Estat actualitzat: Oberta' : 'Estat actualitzat: Tancada', 'ok');
+    } else {
+      showStatusMsg('Error: ' + error.message, 'err');
+      console.error(error);
+      salaToggle.checked = !isOpen; 
+    }
+  });
+
+  async function loadActivities() {
+    const { data } = await supabaseClient.from('activities').select('*').order('id', { ascending: false });
+    activityEditor.innerHTML = '';
+    
+    if (data && data.length > 0) {
+      data.forEach(act => {
+        const row = document.createElement('div');
+        row.className = 'activity-row';
+        row.innerHTML = `
+          <div class="row-top">
+            <input type="text" value="${act.date}" disabled>
+            <input type="text" value="${act.title}" disabled>
+          </div>
+          <input type="text" class="activity-input-full" value="${act.description}" disabled>
+          <button class="remove-link" type="button" onclick="deleteActivity(${act.id})">Eliminar activitat</button>
+        `;
+        activityEditor.appendChild(row);
+      });
+    } else {
+      activityEditor.innerHTML = '<p class="empty-activity-msg">No hi ha activitats creades.</p>';
+    }
+  }
+
+  window.deleteActivity = async (id) => {
+    if (!confirm("Vols eliminar aquesta activitat?")) return;
+    const { error } = await supabaseClient.from('activities').delete().eq('id', id);
+    if (!error) {
+      showStatusMsg('Activitat eliminada correctament', 'ok');
+      loadActivities();
+    } else {
+      showStatusMsg('No s\'ha pogut eliminar l\'activitat', 'err');
+    }
+  };
+
+  document.getElementById('add-activity').addEventListener('click', () => {
+    if (activityEditor.querySelector('p')) activityEditor.innerHTML = '';
+
+    const row = document.createElement('div');
+    row.className = 'activity-row new-activity';
+    row.innerHTML = `
+      <div class="row-top">
+        <input type="text" placeholder="Data (ex. 15 Oct)" class="new-date">
+        <input type="text" placeholder="Títol de l'activitat" class="new-title">
+      </div>
+      <input type="text" placeholder="Descripció breu" class="new-desc activity-input-full">
+      <button class="remove-link" type="button" onclick="this.closest('.activity-row').remove(); if(!activityEditor.hasChildNodes()) loadActivities();">Cancel·lar</button>
+    `;
+    activityEditor.appendChild(row);
+  });
+
+  document.getElementById('save-btn').addEventListener('click', async () => {
+    const newRows = document.querySelectorAll('.new-activity');
+    if (newRows.length === 0) {
+      showStatusMsg("Primer has d'afegir una activitat nova amb el botó de sobre.", 'err');
+      return;
+    }
+
+    let hasSaved = false;
+    let lastError = null;
+
+    for (let row of newRows) {
+      const date = row.querySelector('.new-date').value.trim();
+      const title = row.querySelector('.new-title').value.trim();
+      const description = row.querySelector('.new-desc').value.trim();
+      
+      if (!date || !title) {
+        showStatusMsg('Revisa que la data i el títol no estiguin buits.', 'err');
+        return;
+      }
+
+      const { error } = await supabaseClient.from('activities').insert([{ date, title, description }]);
+      if (!error) {
+        hasSaved = true;
+      } else {
+        lastError = error;
+        console.error(error);
+      }
+    }
+
+    if (hasSaved) {
+      showStatusMsg('Noves activitats desades correctament!', 'ok');
+      loadActivities();
+    } else if (lastError) {
+      showStatusMsg('Error de Supabase: ' + lastError.message, 'err');
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    checkSession();
+  });
+
+  function showStatusMsg(text, type) {
+    statusMsg.style.display = 'block';
+    statusMsg.className = type;
+    statusMsg.innerText = text;
+    setTimeout(() => { statusMsg.style.display = 'none'; }, 4000);
+  }
+
+  checkSession();
+</script>
+</body>
+</html>
